@@ -19,15 +19,11 @@ app.include_router(ProfileRouter)
 app.include_router(NodeRouter)
 
 
-@app.get("/")
+@app.get("/root")
 async def read_root():
-    return {"Hello": "EOTV"}
+    return {"Hello": "EOTVREST"}
 
 
 @app.get("/endpoints")
-def get_all_endpoints():
-    endpionts_list = [{
-        "path": route.path,
-        "name": route.name
-    } for route in app.routes]
-    return endpionts_list
+async def get_all_endpoints():
+    return [{"path": route.path, "name": route.name} for route in app.routes]

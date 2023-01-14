@@ -18,6 +18,10 @@ class DBConnection(ABC):
         pass
 
     @abstractmethod
+    def create_session(self):
+        pass
+
+    @abstractmethod
     def get_session(self):
         pass
 
@@ -36,5 +40,8 @@ class Neo4jConnector(DBConnection):
     def close(self):
         self.driver.close()
 
-    def get_session(self):
+    def create_session(self):
         return self.driver.session()
+
+    def get_session(self):
+        return self.create_session()
