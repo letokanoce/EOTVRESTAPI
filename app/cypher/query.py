@@ -77,7 +77,7 @@ GET_WEIGHT_CORRELATIONS = """
        UNWIND id_2 AS y
        OPTIONAL MATCH (a)-[r:CORRELATE_WITH]-(b)
        WHERE ID(a) = x AND ID(b) = y 
-       RETURN COALESCE(r.weight_correlation, 1) AS r
+       RETURN COALESCE(r.weight_correlation, 100000) AS r
        """
 
 GET_PVAL_CORRELATIONS_PRODUCT = """

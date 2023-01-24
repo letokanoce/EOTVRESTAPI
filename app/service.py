@@ -15,9 +15,6 @@ app.add_middleware(CORSMiddleware,
                    allow_methods=["*"],
                    allow_headers=["*"])
 
-app.include_router(ProfileRouter)
-app.include_router(NodeRouter)
-
 
 @app.get("/root")
 async def read_root():
@@ -27,3 +24,7 @@ async def read_root():
 @app.get("/endpoints")
 async def get_all_endpoints():
     return [{"path": route.path, "name": route.name} for route in app.routes]
+
+
+app.include_router(NodeRouter)
+app.include_router(ProfileRouter)

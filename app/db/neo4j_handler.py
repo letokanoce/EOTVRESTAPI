@@ -13,10 +13,8 @@ class Neo4jQueryer():
         self.key = key
 
     def run_query(self, query: str, parameters: dict) -> Union[list, None]:
-        with self.session:
-            query_results = self.session.run(query, parameters).data()
-            result = self.data_processor.process(query_results, self.key)
-            if result is not None:
-                return result
-            raise HTTPException(status_code=404,
-                                detail=f"{parameters} not found")
+        query_results = self.session.run(query, parameters).data()
+        result = self.data_processor.process(query_results, self.key)
+        if result is not None:
+            return result
+        raise HTTPException(status_code=404, detail=f"{parameters} not found")
