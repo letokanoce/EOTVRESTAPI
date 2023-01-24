@@ -32,7 +32,7 @@ class Neo4jQueryHandler:
         self.session.close()
         return query_results
 
-    def get_sub_features(self, id_list: Union[list[int], None] = None):
+    def get_sub_feature(self, id_list: Union[list[int], None] = None):
         if id_list:
             query_results = self.queryer.run_query(GET_N_FEATURES,
                                                    {"id_list": id_list})

@@ -12,13 +12,13 @@ settings = Settings()
 neo4j_connector = Neo4jConnector(settings)
 
 
-@router.get("/n_features",
-            response_description="Get N Sub Level Features List")
-async def get_n_sub_features(
+@router.get("/n_feature",
+            response_description="Get N Sub Level Feature")
+async def get_n_sub_feature(
         id_list: Union[list[int], None] = Query(default=None),
         session: Session = Depends(neo4j_connector.get_session)):
     query_handler = Neo4jQueryHandler(session)
-    return query_handler.get_sub_features(id_list)
+    return query_handler.get_sub_feature(id_list)
 
 
 @router.get("/n_pvalue", response_description="Get N Sub Level P Value")

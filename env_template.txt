@@ -1,3 +1,4 @@
+This is a template for .env
 APP_NAME = "APP NAME"
 NEO4J_URI =  "NEO4J URL"
 NEO4J_PASSWORD = "NEO4J PASSWORD"
