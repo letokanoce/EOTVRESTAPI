@@ -1,5 +1,5 @@
 GET_FEATURES = """
-       MATCH (c {class:$class, context:$context, meaning:$meaning}) 
+       MATCH (c {class:$class, context: $context, meaning: $meaning}) 
        RETURN c.features AS r;
        """
 
@@ -8,7 +8,7 @@ GET_ALL_NODES = """
        RETURN n;"""
 
 GET_N_ID = """
-       MATCH (s {class: $class, context:$context, meaning:$meaning})
+       MATCH (s {class: $class, context: $context, meaning: $meaning})
        CALL apoc.path.expandConfig(s, {
               relationshipFilter: "HAS_FEATURE",
               minLevel: 1,
