@@ -14,6 +14,7 @@
 
 # Created for Docke:
 Dockerfile
+.dockerignore
 
 # Created for VSCode:
 .vscode
@@ -135,6 +136,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+env_template.txt
 
 # Spyder project settings
 .spyderproject
