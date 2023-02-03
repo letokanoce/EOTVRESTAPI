@@ -25,18 +25,19 @@ async def get_n_sub_ids(category: str = None,
 @router.get(
     "/n_pval_corr_elems",
     response_description="Get N Sub Level P Value Correlations Elements")
-async def get_n_pval_corr_elems(
+async def get_n_pval_cov_elems(
         id_list: Union[list[int], None] = Query(default=None),
         session: Session = Depends(neo4j_connector.get_session)):
     query_handler = Neo4jQueryHandler(session)
     return query_handler.get_sub_pval_corr_elems(id_list)
 
 
-@router.get(
-    "/n_wgt_corr_elems",
-    response_description="Get N Sub Level P Weight Correlations Elements")
-async def get_n_pval_corr_elems(
-        id_list: Union[list[int], None] = Query(default=None),
-        session: Session = Depends(neo4j_connector.get_session)):
+@router.get("/n_sub_level", response_description="Get N Sub Level")
+async def get_n_sub_level(
+    id_list: Union[list[int], None] = Query(default=None),
+    category: str = None,
+    context: str = "reality",
+    meaning: str = "literal",
+    session: Session = Depends(neo4j_connector.get_session)):
     query_handler = Neo4jQueryHandler(session)
-    return query_handler.get_sub_wgt_corr_elems(id_list)
+    return query_handler.get_sub_level(id_list, category, context, meaning)

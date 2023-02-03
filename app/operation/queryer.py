@@ -35,7 +35,7 @@ class Neo4jQueryHandler:
     def get_sub_feature(self, id_list: Union[list[int], None] = None):
         if id_list:
             query_results = self.queryer.run_cypher(GET_N_FEATURES,
-                                                   {"id_list": id_list})
+                                                    {"id_list": id_list})
         else:
             query_results = []
 
@@ -46,7 +46,7 @@ class Neo4jQueryHandler:
         size = len(id_list)
         if id_list:
             query_results_1 = self.queryer.run_cypher(GET_PVAL_CORRELATIONS,
-                                                     {"id_list": id_list})
+                                                      {"id_list": id_list})
             query_matrix_1 = np.array(query_results_1).reshape(size, size)
             query_results_2 = self.queryer.run_cypher(
                 GET_PVAL_CORRELATIONS_PRODUCT, {"id_list": id_list})
@@ -58,11 +58,11 @@ class Neo4jQueryHandler:
         self.session.close()
         return query_results
 
-    def get_sub_wgt_corr_elems(self, id_list: Union[list[int], None] = None):
+    def get_sub_wgt_cov_elems(self, id_list: Union[list[int], None] = None):
         size = len(id_list)
         if id_list:
             query_results_1 = self.queryer.run_cypher(GET_WEIGHT_CORRELATIONS,
-                                                     {"id_list": id_list})
+                                                      {"id_list": id_list})
             query_matrix_1 = np.array(query_results_1).reshape(size, size)
             query_results_2 = self.queryer.run_cypher(
                 GET_WEIGHT_CORRELATIONS_PRODUCT, {"id_list": id_list})
@@ -77,7 +77,7 @@ class Neo4jQueryHandler:
     def get_sub_pval(self, id_list: Union[list[int], None] = None):
         if id_list:
             query_results = self.queryer.run_cypher(GET_N_PVALUES,
-                                                   {"id_list": id_list})
+                                                    {"id_list": id_list})
         else:
             query_results = []
 
@@ -87,7 +87,26 @@ class Neo4jQueryHandler:
     def get_sub_wgt(self, id_list: Union[list[int], None] = None):
         if id_list:
             query_results = self.queryer.run_cypher(GET_N_WEIGHT,
-                                                   {"id_list": id_list})
+                                                    {"id_list": id_list})
+        else:
+            query_results = []
+
+        self.session.close()
+        return query_results
+
+    def get_sub_level(self,
+                      id_list: Union[list[int], None] = None,
+                      category: str = None,
+                      context: str = "reality",
+                      meaning: str = "literal"):
+        if id_list:
+            query_results = self.queryer.run_cypher(
+                GET_SUB_LEVEL, {
+                    "id_list": id_list,
+                    "class": category,
+                    "context": context,
+                    "meaning": meaning,
+                })
         else:
             query_results = []
 

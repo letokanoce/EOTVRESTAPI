@@ -1,5 +1,5 @@
 GET_FEATURES = """
-       MATCH (c {class:$class, context: $context, meaning: $meaning}) 
+       MATCH (c {class: $class, context: $context, meaning: $meaning}) 
        RETURN c.features AS r;
        """
 
@@ -105,3 +105,14 @@ GET_PARENT_NODE = """
        WHERE id(b) = x
        RETURN id(a)
        """
+
+GET_SUB_LEVEL = """
+      WITH $id_list AS id
+      MATCH (n {class: $class, context: $context, meaning: $meaning}) 
+      UNWIND id AS i
+      MATCH (m) 
+      WHERE ID(m) = i
+      WITH n, m
+      MATCH p = shortestPath((n)-[:HAS_FEATURE*]-(m))
+      RETURN length(p) AS r
+      """
