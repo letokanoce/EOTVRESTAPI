@@ -5,6 +5,7 @@ from neo4j import Session
 from settings.configs import Settings
 from db.dbdriver import Neo4jConnector
 from operation.queryer import Neo4jQueryHandler
+from utils.dataproc import MatrixProcessor
 
 router = APIRouter()
 settings = Settings()
@@ -18,8 +19,12 @@ async def get_n_sub_ids(category: str = None,
                         meaning: str = "literal",
                         session: Session = Depends(
                             neo4j_connector.get_session)):
-    query_handler = Neo4jQueryHandler(session)
-    return query_handler.get_sub_ids(category, sub_level, context, meaning)
+    query_handler = Neo4jQueryHandler(session, MatrixProcessor(), 'r')
+    result = query_handler.get_sub_ids(category, sub_level, context, meaning)
+    id_list = result[0][0]
+    parent_node_id = result[0][1]
+    n_level = result[0][2]
+    return id_list, parent_node_id, n_level
 
 
 @router.get(
@@ -28,7 +33,7 @@ async def get_n_sub_ids(category: str = None,
 async def get_n_pval_cov_elems(
         id_list: Union[list[int], None] = Query(default=None),
         session: Session = Depends(neo4j_connector.get_session)):
-    query_handler = Neo4jQueryHandler(session)
+    query_handler = Neo4jQueryHandler(session, MatrixProcessor(), 'r')
     return query_handler.get_sub_pval_corr_elems(id_list)
 
 
@@ -39,5 +44,5 @@ async def get_n_sub_level(
     context: str = "reality",
     meaning: str = "literal",
     session: Session = Depends(neo4j_connector.get_session)):
-    query_handler = Neo4jQueryHandler(session)
+    query_handler = Neo4jQueryHandler(session, MatrixProcessor(), 'r')
     return query_handler.get_sub_level(id_list, category, context, meaning)

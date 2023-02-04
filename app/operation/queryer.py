@@ -3,15 +3,18 @@ from typing import Union
 from neo4j import Session
 
 from db.dbhandle import Neo4jQueryer
-from utils.dataproc import MatrixProcessor
+from utils.dataproc import IProcessData
 from cypher.querycypher import *
 
 
 class Neo4jQueryHandler:
 
-    def __init__(self, session: Session):
+    def __init__(self, session: Session, processor: IProcessData, key: str):
         self.session = session
-        self.queryer = Neo4jQueryer(session, MatrixProcessor(), 'r')
+        self.queryer = self._init_queryer(processor, key)
+
+    def _init_queryer(self, processor: IProcessData, key: str):
+        return Neo4jQueryer(self.session, processor, key)
 
     def get_sub_ids(self,
                     category: str = None,

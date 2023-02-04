@@ -9,6 +9,7 @@ GET_ALL_NODES = """
 
 GET_N_ID = """
        MATCH (s {class: $class, context: $context, meaning: $meaning})
+       OPTIONAL MATCH p = (s)-[:HAS_FEATURE*]->()
        CALL apoc.path.expandConfig(s, {
               relationshipFilter: "HAS_FEATURE",
               minLevel: 1,
@@ -17,10 +18,10 @@ GET_N_ID = """
        YIELD path
        UNWIND relationShips(path) AS rel
        WITH collect(DISTINCT endNode(rel)) AS endNodes, 
-            collect(DISTINCT startNode(rel)) AS startNodes
+       collect(DISTINCT startNode(rel)) AS startNodes,s,p
        UNWIND endNodes AS leaf
-       WITH leaf WHERE NOT leaf IN startNodes
-       RETURN id(leaf) AS r
+       WITH leaf, s, p WHERE NOT leaf IN startNodes
+       RETURN [collect(DISTINCT id(leaf)), id(s), max(length(p))] AS r
        """
 
 GET_N_FEATURES = """

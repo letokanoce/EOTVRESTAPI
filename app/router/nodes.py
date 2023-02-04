@@ -6,6 +6,7 @@ from settings.configs import Settings
 from db.dbdriver import Neo4jConnector
 from operation.queryer import Neo4jQueryHandler
 from operation.poster import Neo4jPostHandler
+from utils.dataproc import MatrixProcessor
 
 router = APIRouter()
 settings = Settings()
@@ -27,7 +28,7 @@ async def create_node(category: str = Body(None, embed=True),
 async def get_n_sub_feature(
         id_list: Union[list[int], None] = Query(default=None),
         session: Session = Depends(neo4j_connector.get_session)):
-    query_handler = Neo4jQueryHandler(session)
+    query_handler = Neo4jQueryHandler(session, MatrixProcessor(), 'r')
     return query_handler.get_sub_feature(id_list)
 
 
@@ -35,7 +36,7 @@ async def get_n_sub_feature(
 async def get_sub_n_pval(id_list: Union[list[int], None] = Query(default=None),
                          session: Session = Depends(
                              neo4j_connector.get_session)):
-    query_handler = Neo4jQueryHandler(session)
+    query_handler = Neo4jQueryHandler(session, MatrixProcessor(), 'r')
     return query_handler.get_sub_pval(id_list)
 
 
@@ -43,5 +44,5 @@ async def get_sub_n_pval(id_list: Union[list[int], None] = Query(default=None),
 async def get_sub_n_wgt(id_list: Union[list[int], None] = Query(default=None),
                         session: Session = Depends(
                             neo4j_connector.get_session)):
-    query_handler = Neo4jQueryHandler(session)
+    query_handler = Neo4jQueryHandler(session, MatrixProcessor(), 'r')
     return query_handler.get_sub_wgt(id_list)
