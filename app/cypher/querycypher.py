@@ -109,11 +109,12 @@ GET_PARENT_NODE = """
 
 GET_SUB_LEVEL = """
       WITH $id_list AS id
-      MATCH (n {class: $class, context: $context, meaning: $meaning}) 
+      MATCH (n) 
+      WHERE ID(n) = $parent_id
       UNWIND id AS i
       MATCH (m) 
       WHERE ID(m) = i
       WITH n, m
       MATCH p = shortestPath((n)-[:HAS_FEATURE*]-(m))
-      RETURN length(p) AS r
+      RETURN [collect(length(p)), '1'] AS r
       """

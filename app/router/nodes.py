@@ -6,7 +6,7 @@ from settings.configs import Settings
 from db.dbdriver import Neo4jConnector
 from operation.queryer import Neo4jQueryHandler
 from operation.poster import Neo4jPostHandler
-from utils.dataproc import MatrixProcessor
+from utils.dataproc import StringProcessor, MatrixProcessor
 
 router = APIRouter()
 settings = Settings()
@@ -19,7 +19,7 @@ async def create_node(category: str = Body(None, embed=True),
                       meaning: str = Body("figurative", embed=True),
                       descriptions: dict = Body({}, embed=True),
                       session: Session = Depends(neo4j_connector.get_session)):
-    neo4j_post_handler = Neo4jPostHandler(session)
+    neo4j_post_handler = Neo4jPostHandler(session, StringProcessor())
     return neo4j_post_handler.create_node(category, context, meaning,
                                           descriptions)
 

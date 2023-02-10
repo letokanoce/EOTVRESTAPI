@@ -18,7 +18,7 @@ class Neo4jQueryHandler:
 
     def get_sub_ids(self,
                     category: str = None,
-                    sub_level: int = 1,
+                    sub_class_level: int = 1,
                     context: str = "reality",
                     meaning: str = "literal"):
         if category:
@@ -27,7 +27,7 @@ class Neo4jQueryHandler:
                     "class": category,
                     "context": context,
                     "meaning": meaning,
-                    "hop": sub_level
+                    "hop": sub_class_level
                 })
         else:
             query_results = []
@@ -97,19 +97,14 @@ class Neo4jQueryHandler:
         self.session.close()
         return query_results
 
-    def get_sub_level(self,
-                      id_list: Union[list[int], None] = None,
-                      category: str = None,
-                      context: str = "reality",
-                      meaning: str = "literal"):
+    def get_level(self,
+                  parent_id: int,
+                  id_list: Union[list[int], None] = None):
         if id_list:
-            query_results = self.queryer.run_cypher(
-                GET_SUB_LEVEL, {
-                    "id_list": id_list,
-                    "class": category,
-                    "context": context,
-                    "meaning": meaning,
-                })
+            query_results = self.queryer.run_cypher(GET_SUB_LEVEL, {
+                "id_list": id_list,
+                "parent_id": parent_id
+            })
         else:
             query_results = []
 
