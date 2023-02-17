@@ -20,5 +20,12 @@ class DatabaseSettings(BaseSettings):
     NEO4J_PASSWORD: str = Field(..., env="NEO4J_PASSWORD")
 
 
-class Settings(CommonSettings, ServerSettings, DatabaseSettings):
+class CacheSettings(BaseSettings):
+    REDIS_HOST: str = Field(..., env="REDIS_HOST")
+    REDIS_PORT: int = Field(..., env="REDIS_PORT")
+    REDIS_PASSWORD: str = Field(..., env="REDIS_PASSWORD")
+
+
+class Settings(CommonSettings, ServerSettings, DatabaseSettings,
+               CacheSettings):
     pass

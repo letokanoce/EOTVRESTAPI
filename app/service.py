@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from router.profiles import router as ProfileRouter
 from router.nodes import router as NodeRouter
+from router.cache import router as CacheRouter
 
 app = FastAPI(openapi_url="/api/v1/openapi.json")
 
@@ -28,3 +29,4 @@ async def get_all_endpoints():
 
 app.include_router(NodeRouter)
 app.include_router(ProfileRouter)
+app.include_router(CacheRouter)
