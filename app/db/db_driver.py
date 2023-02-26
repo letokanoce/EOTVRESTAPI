@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from neo4j import GraphDatabase
 
-from settings.configs import Settings
+from configuration.configs import Settings
 
 
 class DBConnection(ABC):

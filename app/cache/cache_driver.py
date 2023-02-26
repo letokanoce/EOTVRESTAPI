@@ -2,7 +2,7 @@ import redis
 import pickle
 
 from abc import ABC, abstractmethod
-from settings.configs import Settings
+from configuration.configs import Settings
 from cache.sub_strat import ISubStrategy
 
 

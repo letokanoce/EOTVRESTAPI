@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from settings.configs import Settings
+from configuration.configs import Settings
 from cache.cache_driver import RedisConnector
 from cache.sub_strat import LRUStrategy
 
@@ -15,5 +15,5 @@ async def get_redis(base_profile):
 
 
 @router.put("/set/redis")
-async def set_redis(base_profile, sub_strt: LRUStrategy):
-    return redis_connector.set(base_profile, sub_strt)
+async def set_redis(base_profile):
+    return redis_connector.set(base_profile, LRUStrategy())

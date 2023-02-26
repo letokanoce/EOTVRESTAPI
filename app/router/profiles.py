@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Query
 from typing import Union
 from neo4j import Session
 
-from settings.configs import Settings
+from configuration.configs import Settings
 from db.db_driver import Neo4jConnector
 from handler.queryer import Neo4jQueryHandler
 from utils.dataproc import MatrixProcessor
