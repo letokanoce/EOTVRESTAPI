@@ -13,7 +13,7 @@ settings = Settings()
 neo4j_connector = Neo4jConnector(settings)
 
 
-@router.post("/create_node", response_description="Create a node")
+@router.post("/create/node", response_description="Create a node")
 async def create_node(category: str = Body(None, embed=True),
                       context: str = Body("reality", embed=True),
                       meaning: str = Body("figurative", embed=True),
@@ -24,7 +24,7 @@ async def create_node(category: str = Body(None, embed=True),
                                           descriptions)
 
 
-@router.get("/n_feature", response_description="Get N Sub Level Feature")
+@router.get("/n/feature", response_description="Get N Sub Level Feature")
 async def get_n_sub_feature(
         id_list: Union[list[int], None] = Query(default=None),
         session: Session = Depends(neo4j_connector.get_session)):
@@ -32,7 +32,7 @@ async def get_n_sub_feature(
     return query_handler.query_feature(id_list)
 
 
-@router.get("/n_pvalue", response_description="Get N Sub Level P Value")
+@router.get("/n/pvalue", response_description="Get N Sub Level P Value")
 async def get_sub_n_pval(id_list: Union[list[int], None] = Query(default=None),
                          session: Session = Depends(
                              neo4j_connector.get_session)):
@@ -40,7 +40,7 @@ async def get_sub_n_pval(id_list: Union[list[int], None] = Query(default=None),
     return query_handler.query_pval(id_list)
 
 
-@router.get("/n_weight", response_description="Get N Sub Level Weight")
+@router.get("/n/weight", response_description="Get N Sub Level Weight")
 async def get_sub_n_wgt(id_list: Union[list[int], None] = Query(default=None),
                         session: Session = Depends(
                             neo4j_connector.get_session)):
