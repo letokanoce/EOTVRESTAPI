@@ -1,5 +1,6 @@
 import redis
 import pickle
+import datetime
 
 from abc import ABC, abstractmethod
 from configuration.configs import Settings
@@ -12,7 +13,7 @@ class CacheConnection(ABC):
         self.settings = settings
 
     @abstractmethod
-    def get(self, base_profile):
+    def get(self, key):
         pass
 
     @abstractmethod
@@ -32,8 +33,7 @@ class RedisConnector(CacheConnection):
                                     password=self.settings.REDIS_PASSWORD,
                                     db=0)
 
-    def get(self, base_profile):
-        key = base_profile.category + base_profile.environment.context + base_profile.environment.meaning
+    def get(self, key):
         with redis.Redis(connection_pool=self.conn_pool) as connection:
             data = connection.hgetall(key)
             if data:

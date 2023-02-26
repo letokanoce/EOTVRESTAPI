@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+import datetime
 
 from configuration.configs import Settings
 from cache.cache_driver import RedisConnector
@@ -10,8 +11,8 @@ redis_connector = RedisConnector(settings)
 
 
 @router.get("/get/redis")
-async def get_redis(base_profile):
-    return redis_connector.get(base_profile)
+async def get_redis(key: str):
+    return redis_connector.get(key)
 
 
 @router.put("/set/redis")
