@@ -1,8 +1,8 @@
 from neo4j import Session
 
-from db.dbhandle import Neo4jPoster
+from db.db_handler import Neo4jPoster
 from utils.dataproc import IProcessData
-from cypher.postcypher import *
+from cypher.post_cypher import *
 
 
 class Neo4jPostHandler:
@@ -10,10 +10,10 @@ class Neo4jPostHandler:
     def __init__(self, session: Session, processor: IProcessData):
         self.session = session
         self.poster = self._init_queryer(processor)
-    
+
     def _init_queryer(self, processor: IProcessData):
         return Neo4jPoster(self.session, processor)
-    
+
     def create_node(self,
                     category: str = None,
                     context: str = "reality",

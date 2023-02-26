@@ -1,11 +1,12 @@
 GET_FEATURES = """
        MATCH (c {class: $class, context: $context, meaning: $meaning}) 
-       RETURN c.features AS r;
+       RETURN c.features AS r
        """
 
 GET_ALL_NODES = """
        MATCH (n) 
-       RETURN n;"""
+       RETURN n
+       """
 
 GET_N_ID = """
        MATCH (s {class: $class, context: $context, meaning: $meaning})
