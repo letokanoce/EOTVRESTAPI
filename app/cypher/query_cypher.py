@@ -8,6 +8,41 @@ GET_ALL_NODES = """
        RETURN n
        """
 
+GET_IDS = """
+MATCH (s {class: $class, context: $context, meaning: $meaning})
+CALL apoc.path.expandConfig(s, {
+    relationshipFilter: "HAS_FEATURE",
+    minLevel: 1,
+    maxLevel: $hop
+    }) YIELD path
+UNWIND relationships(path) AS rel
+WITH s, endNode(rel) AS subGraph, length(path) AS pathLength
+UNWIND subGraph AS node
+UNWIND pathLength AS step
+RETURN ID(s) AS parentNode, 
+       COLLECT (DISTINCT ID(node)) AS subNodes, 
+       COLLECT (step) AS subLevel
+"""
+
+GET_LEAVES_IDS = """
+MATCH (s {class: $class, context: $context, meaning: $meaning})
+CALL apoc.path.expandConfig(s, {
+    relationshipFilter: "HAS_FEATURE",
+    minLevel: 1,
+    maxLevel: $hop
+    }) YIELD path
+UNWIND relationships(path) AS rel
+WITH s,
+     collect(DISTINCT endNode(rel)) AS endNodes, 
+     collect(DISTINCT startNode(rel)) AS startNodes,
+     length(path) AS pathLength
+UNWIND endNodes AS leaf
+WITH s, pathLength, leaf WHERE NOT leaf IN startNodes
+RETURN id(s) AS parentNode,
+       collect (DISTINCT ID(leaf)) AS subNodes,
+       collect (pathLength) AS subLevel
+       """
+
 GET_N_ID = """
        MATCH (s {class: $class, context: $context, meaning: $meaning})
        OPTIONAL MATCH p = (s)-[:HAS_FEATURE*]->()
