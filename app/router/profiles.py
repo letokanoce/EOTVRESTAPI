@@ -1,11 +1,12 @@
-from fastapi import APIRouter, Depends, Query
 from typing import Union
+
+from fastapi import APIRouter, Depends, Query
 from neo4j import Session
 
-from configuration.configs import Settings
-from db.db_driver import Neo4jConnector
-from handler.queryer import Neo4jQueryHandler
-from utils.dataproc import MatrixProcessor
+from app.configuration.configs import Settings
+from app.db.db_driver import Neo4jConnector
+from app.handler.queryer import Neo4jQueryHandler
+from app.utils.dataproc import MatrixProcessor
 
 router = APIRouter()
 settings = Settings()

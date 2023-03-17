@@ -1,7 +1,7 @@
 import datetime
 
 
-class Enviroment:
+class Environment:
 
     def __init__(self, context, meaning):
         self.context = context
@@ -10,7 +10,7 @@ class Enviroment:
 
 class BaseProfile:
 
-    def __init__(self, category: str, sub_level: int, environment: Enviroment):
+    def __init__(self, category: str, sub_level: int, environment: Environment):
         self.category = category
         self.sub_level = sub_level
         self.environment = environment

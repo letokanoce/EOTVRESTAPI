@@ -1,9 +1,9 @@
 from fastapi import APIRouter
 import datetime
 
-from configuration.configs import Settings
-from cache.cache_driver import RedisConnector
-from cache.sub_strat import LRUStrategy
+from app.configuration.configs import Settings
+from app.cache.cache_driver import RedisConnector
+from app.cache.sub_strat import LRUStrategy
 
 router = APIRouter()
 settings = Settings()

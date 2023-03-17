@@ -1,8 +1,8 @@
 from neo4j import Session
 
-from db.db_handler import Neo4jPoster
-from utils.dataproc import IProcessData
-from cypher.post_cypher import *
+from app.db.db_handler import Neo4jPoster
+from app.utils.dataproc import IProcessData
+from app.cypher.post_cypher import *
 
 
 class Neo4jPostHandler:

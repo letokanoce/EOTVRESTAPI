@@ -7,22 +7,27 @@ GET_ALL_NODES = """
        MATCH (n) 
        RETURN n
        """
+GET_N_FEATURES = """
+       MATCH (n)
+       WHERE id(n) in $id_list
+       RETURN collect(n.class) AS features
+       """
 
 GET_IDS = """
-MATCH (s {class: $class, context: $context, meaning: $meaning})
-CALL apoc.path.expandConfig(s, {
-    relationshipFilter: "HAS_FEATURE",
-    minLevel: 1,
-    maxLevel: $hop
-    }) YIELD path
-UNWIND relationships(path) AS rel
-WITH s, endNode(rel) AS subGraph, length(path) AS pathLength
-UNWIND subGraph AS node
-UNWIND pathLength AS step
-RETURN ID(s) AS parentNode, 
-       COLLECT (DISTINCT ID(node)) AS subNodes, 
-       COLLECT (step) AS subLevel
-"""
+       MATCH (s {class: $class, context: $context, meaning: $meaning})
+       CALL apoc.path.expandConfig(s, {
+           relationshipFilter: "HAS_FEATURE",
+           minLevel: 1,
+           maxLevel: $hop
+           }) YIELD path
+       UNWIND relationships(path) AS rel
+       WITH s, endNode(rel) AS subGraph, length(path) AS pathLength
+       UNWIND subGraph AS node
+       UNWIND pathLength AS step
+       RETURN ID(s) AS parentNode, 
+              COLLECT (DISTINCT ID(node)) AS subNodes, 
+              COLLECT (step) AS subLevel
+       """
 
 GET_LEAVES_IDS = """
 MATCH (s {class: $class, context: $context, meaning: $meaning})
@@ -60,13 +65,7 @@ GET_N_ID = """
        RETURN [collect(DISTINCT id(leaf)), id(s), max(length(p))] AS r
        """
 
-GET_N_FEATURES = """
-       WITH $id_list AS id
-       UNWIND id AS i
-       MATCH (n)
-       WHERE id(n) = i
-       RETURN n.class AS r
-       """
+
 
 GET_N_PVALUES = """
        WITH $id_list AS id

@@ -2,19 +2,21 @@ import numpy as np
 from typing import Union
 from neo4j import Session
 
-from db.db_handler import Neo4jQueryer
-from utils.dataproc import IProcessData
-from cypher.query_cypher import *
+from app.db.db_handler import Neo4jQueryer
+from app.utils.dataproc import IProcessData
+
+from app.cypher.query_cypher import *
 
 
 class Neo4jQueryHandler:
 
-    def __init__(self, session: Session, processor: IProcessData, key: str):
+    def __init__(self, session: Session, processor: IProcessData):
         self.session = session
-        self.queryer = self._init_queryer(processor, key)
+        self.processor = processor
 
-    def _init_queryer(self, processor: IProcessData, key: str):
-        return Neo4jQueryer(self.session, processor, key)
+    @property
+    def queryer(self):
+        return Neo4jQueryer(self.session, self.processor)
 
     def query_ids(self,
                   category: str = None,
@@ -37,11 +39,9 @@ class Neo4jQueryHandler:
 
     def query_feature(self, id_list: Union[list[int], None] = None):
         if id_list:
-            query_results = self.queryer.run_cypher(GET_N_FEATURES,
-                                                    {"id_list": id_list})
+            query_results = self.queryer.run_cypher(GET_N_FEATURES, {"id_list": id_list})
         else:
             query_results = []
-
         self.session.close()
         return query_results
 

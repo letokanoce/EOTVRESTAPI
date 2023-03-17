@@ -3,8 +3,8 @@ import pickle
 import datetime
 
 from abc import ABC, abstractmethod
-from configuration.configs import Settings
-from cache.sub_strat import ISubStrategy
+from app.configuration.configs import Settings
+from app.cache.sub_strat import ISubStrategy
 
 
 class CacheConnection(ABC):

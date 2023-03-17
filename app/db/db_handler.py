@@ -3,7 +3,7 @@ from neo4j import Session
 from fastapi import HTTPException
 from typing import Union
 
-from utils.dataproc import IProcessData
+from app.utils.dataproc import IProcessData
 
 
 class Neo4jHandler(ABC):
@@ -18,14 +18,16 @@ class Neo4jHandler(ABC):
 
 class Neo4jQueryer(Neo4jHandler):
 
-    def __init__(self, session: Session, processor: IProcessData, key: str):
-        self.session = session
+    def __init__(self, session: Session, processor: IProcessData):
+        super().__init__(session)
         self.data_processor = processor
-        self.key = key
 
     def run_cypher(self, cypher: str, parameters: dict) -> Union[list, None]:
         query_results = self.session.run(cypher, parameters).data()
-        result = self.data_processor.process(query_results, self.key)
+        print("query_result", query_results)
+        print("querytype", type(query_results))
+        result = self.data_processor.process(query_results)
+        print("processed result", result)
         if result is not None:
             return result
         raise HTTPException(status_code=404, detail=f"{parameters} not found")

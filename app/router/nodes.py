@@ -2,11 +2,11 @@ from fastapi import APIRouter, Body, Depends, Query
 from typing import Union
 from neo4j import Session
 
-from configuration.configs import Settings
-from db.db_driver import Neo4jConnector
-from handler.queryer import Neo4jQueryHandler
-from handler.poster import Neo4jPostHandler
-from utils.dataproc import StringProcessor, MatrixProcessor
+from app.configuration.configs import Settings
+from app.db.db_driver import Neo4jConnector
+from app.handler.queryer import Neo4jQueryHandler
+from app.handler.poster import Neo4jPostHandler
+from app.utils.dataproc import StringProcessor, MatrixProcessor
 
 router = APIRouter()
 settings = Settings()
@@ -28,7 +28,7 @@ async def create_node(category: str = Body(None, embed=True),
 async def get_n_sub_feature(
         id_list: Union[list[int], None] = Query(default=None),
         session: Session = Depends(neo4j_connector.get_session)):
-    query_handler = Neo4jQueryHandler(session, MatrixProcessor(), 'r')
+    query_handler = Neo4jQueryHandler(session, MatrixProcessor())
     return query_handler.query_feature(id_list)
 
 

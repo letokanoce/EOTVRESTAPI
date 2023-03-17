@@ -30,6 +30,5 @@ class UniqOutcomesProcessor(IProcessData):
 
 class MatrixProcessor(IProcessData):
 
-    def process(self, query_results: List[Dict],
-                key: str) -> Union[list, None]:
-        return [d[key] for d in query_results]
+    def process(self, query_results: List[Dict]) -> Union[list, None]:
+        return [[val for val in query_results[0][key]] for key in query_results[0]]
