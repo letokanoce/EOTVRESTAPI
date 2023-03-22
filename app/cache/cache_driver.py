@@ -1,10 +1,10 @@
-import redis
-
 from abc import ABC, abstractmethod
 
+import redis
+
 from app.cache.cache_handler import CacheHandler
-from app.configuration.configs import Settings
 from app.cache.sub_strat import ISubStrategy
+from app.configuration.configs import Settings
 from app.epbelsys.model import BaseProfile
 
 

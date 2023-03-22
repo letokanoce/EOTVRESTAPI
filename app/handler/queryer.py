@@ -1,11 +1,11 @@
-import numpy as np
 from typing import Union
+
+import numpy as np
 from neo4j import Session
 
+from app.cypher.query_cypher import *
 from app.db.db_handler import Neo4jQueryer
 from app.utils.data_formatter import IProcessData
-
-from app.cypher.query_cypher import *
 
 
 class Neo4jQueryHandler:

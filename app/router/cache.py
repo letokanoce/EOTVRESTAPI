@@ -3,7 +3,7 @@ import json
 import pickle
 
 from fastapi import APIRouter, Depends, Body
-from typing import Dict, Any
+
 from app.cache.cache_driver import RedisConnector
 from app.cache.sub_strat import LRUStrategy
 from app.configuration.configs import Settings

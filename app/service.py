@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.router.profiles import router as profile_router
-from app.router.nodes import router as node_router
+
 from app.router.cache import router as cache_router
+from app.router.nodes import router as node_router
+from app.router.profiles import router as profile_router
 
 app = FastAPI(openapi_url="/api/v1/openapi.json")
 

@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
-from neo4j import Session
-from fastapi import HTTPException
 from typing import Union
+
+from fastapi import HTTPException
+from neo4j import Session
 
 from app.utils.data_formatter import IProcessData
 
