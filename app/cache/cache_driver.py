@@ -1,10 +1,11 @@
 import redis
-import pickle
-import datetime
 
 from abc import ABC, abstractmethod
+
+from app.cache.cache_handler import CacheHandler
 from app.configuration.configs import Settings
 from app.cache.sub_strat import ISubStrategy
+from app.epbelsys.model import BaseProfile
 
 
 class CacheConnection(ABC):
@@ -13,52 +14,30 @@ class CacheConnection(ABC):
         self.settings = settings
 
     @abstractmethod
-    def get(self, key):
+    def get(self, key: str):
         pass
 
     @abstractmethod
-    def set(self, base_profile):
+    def set(self, key: str, base_profile: BaseProfile):
         pass
 
 
 class RedisConnector(CacheConnection):
-
     def __init__(self, settings):
         super().__init__(settings)
-        self.conn_pool = self.create_pool()
+        self.pool = redis.ConnectionPool(
+            host=settings.REDIS_HOST,
+            port=settings.REDIS_PORT,
+            password=settings.REDIS_PASSWORD,
+            db=0
+        )
+        self.cache_handler = CacheHandler(self.pool)
 
-    def create_pool(self):
-        return redis.ConnectionPool(host=self.settings.REDIS_HOST,
-                                    port=self.settings.REDIS_PORT,
-                                    password=self.settings.REDIS_PASSWORD,
-                                    db=0)
+    def get(self, base_profile: BaseProfile):
+        return self.cache_handler.get(base_profile)
 
-    def get(self, key):
-        with redis.Redis(connection_pool=self.conn_pool) as connection:
-            data = connection.hgetall(key)
-            if data:
-                return [pickle.loads(val) for val in data.values()]
-            else:
-                return []
+    def set(self, base_profile: BaseProfile, strategy: ISubStrategy):
+        self.cache_handler.set(base_profile, strategy)
 
-    def set(self, base_profile, strategy: ISubStrategy):
-        key = base_profile.category + base_profile.environment.context + base_profile.environment.meaning
-        with redis.Redis(connection_pool=self.conn_pool) as connection:
-            if connection.exists(key):
-                values = connection.hvals(key)
-                if any(
-                        pickle.loads(val).sub_level == base_profile.sub_level
-                        for val in values):
-                    print('value already exists in cache')
-                else:
-                    if len(values) < 10:
-                        connection.hset(key, base_profile.sub_level,
-                                        pickle.dumps(base_profile))
-                        print('added new value to cache')
-                    else:
-                        print('replacing the value in cache')
-                        strategy.replace(key, base_profile, connection)
-            else:
-                connection.hset(key, base_profile.sub_level,
-                                pickle.dumps(base_profile))
-                print('added new value to cache')
+    def clear(self):
+        self.cache_handler.clear()

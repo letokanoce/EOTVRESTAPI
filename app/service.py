@@ -17,7 +17,7 @@ app.add_middleware(CORSMiddleware,
                    allow_headers=["*"])
 
 
-@app.get("/root")
+@app.get("/")
 async def read_root():
     return {"Hello": "EOTVREST"}
 

@@ -6,7 +6,7 @@ from app.configuration.configs import Settings
 from app.db.db_driver import Neo4jConnector
 from app.handler.queryer import Neo4jQueryHandler
 from app.handler.poster import Neo4jPostHandler
-from app.utils.dataproc import StringProcessor, MatrixProcessor
+from app.utils.data_formatter import StringProcessor, MatrixProcessor
 
 router = APIRouter()
 settings = Settings()
@@ -24,25 +24,25 @@ async def create_node(category: str = Body(None, embed=True),
                                           descriptions)
 
 
-@router.get("/n/feature", response_description="Get N Sub Level Feature")
+@router.get("/feature", response_description="Get N Sub Level Feature")
 async def get_n_sub_feature(
         id_list: Union[list[int], None] = Query(default=None),
         session: Session = Depends(neo4j_connector.get_session)):
     query_handler = Neo4jQueryHandler(session, MatrixProcessor())
-    return query_handler.query_feature(id_list)
+    return query_handler.query_feature(id_list)[0]
 
 
-@router.get("/n/pvalue", response_description="Get N Sub Level P Value")
+@router.get("/pvalue", response_description="Get N Sub Level P Value")
 async def get_sub_n_pval(id_list: Union[list[int], None] = Query(default=None),
                          session: Session = Depends(
                              neo4j_connector.get_session)):
-    query_handler = Neo4jQueryHandler(session, MatrixProcessor(), 'r')
-    return query_handler.query_pval(id_list)
+    query_handler = Neo4jQueryHandler(session, MatrixProcessor())
+    return query_handler.query_pval(id_list)[0]
 
 
-@router.get("/n/weight", response_description="Get N Sub Level Weight")
+@router.get("/weight", response_description="Get N Sub Level Weight")
 async def get_sub_n_wgt(id_list: Union[list[int], None] = Query(default=None),
                         session: Session = Depends(
                             neo4j_connector.get_session)):
-    query_handler = Neo4jQueryHandler(session, MatrixProcessor(), 'r')
-    return query_handler.query_wgt(id_list)
+    query_handler = Neo4jQueryHandler(session, MatrixProcessor())
+    return query_handler.query_wgt(id_list)[0]

@@ -1,7 +1,7 @@
 from neo4j import Session
 
 from app.db.db_handler import Neo4jPoster
-from app.utils.dataproc import IProcessData
+from app.utils.data_formatter import IProcessData
 from app.cypher.post_cypher import *
 
 

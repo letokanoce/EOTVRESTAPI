@@ -1,7 +1,7 @@
 import uvicorn
 import asyncio
 
-from model.base import *
+from epbelsys.model import *
 
 
 async def main():
