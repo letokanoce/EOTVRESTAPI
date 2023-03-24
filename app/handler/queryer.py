@@ -69,14 +69,17 @@ class Neo4jQueryHandler:
         self.session.close()
         return query_results
 
-    def query_wgt_cov_elems(self, id_list: Union[list[int], None] = None):
+    def query_wgt_cov_co(self, id_list: Union[list[int], None] = None):
         if id_list:
-            coefficient_result = self.query_session.run_cypher(GET_WEIGHT_CORRELATION_CO, {"id_list": id_list})
-            coefficient_matrix = np.array(coefficient_result).reshape(len(id_list), len(id_list))
-            sd_product_result = self.query_session.run_cypher(GET_WEIGHT_CORRELATIONS_SDPRO, {"id_list": id_list})
-            sd_product_matrix = np.array(sd_product_result).reshape(len(id_list), len(id_list))
-            matrix = np.multiply(coefficient_matrix, sd_product_matrix)
-            query_results = list(matrix.flatten())
+            query_results = self.query_session.run_cypher(GET_WEIGHT_CORRELATION_CO, {"id_list": id_list})
+        else:
+            query_results = []
+        self.session.close()
+        return query_results
+
+    def query_wgt_cov_sd_pro(self, id_list: Union[list[int], None] = None):
+        if id_list:
+            query_results = self.query_session.run_cypher(GET_WEIGHT_CORRELATIONS_SDPRO, {"id_list": id_list})
         else:
             query_results = []
         self.session.close()

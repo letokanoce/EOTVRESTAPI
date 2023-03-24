@@ -21,6 +21,10 @@ class CacheConnection(ABC):
     def set(self, key: str, base_profile: BaseProfile):
         pass
 
+    @abstractmethod
+    def clear(self):
+        pass
+
 
 class RedisConnector(CacheConnection):
     def __init__(self, settings):

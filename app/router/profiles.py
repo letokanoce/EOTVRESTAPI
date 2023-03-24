@@ -38,9 +38,17 @@ async def get_n_pval_corr(
     return query_handler.query_pval_corr_elems(id_list)
 
 
-@router.get("/n/wgt/cov", response_description="Get N Sub Level P Value Covariance Elements")
-async def get_n_wgt_cov(
+@router.get("/n/wgt/cov/co", response_description="Get N Sub Level P Value Covariance Coefficients Elements")
+async def get_n_wgt_cov_co(
         id_list: Union[list[int], None] = Query(default=None),
         session: Session = Depends(neo4j_connector.get_session)):
     query_handler = Neo4jQueryHandler(session, MatrixProcessor())
-    return query_handler.query_wgt_cov_elems(id_list)
+    return (query_handler.query_wgt_cov_co(id_list))[0]
+
+
+@router.get("/n/wgt/cov/sdpro", response_description="Get N Sub Level P Value Covariance SD Products Elements")
+async def get_n_wgt_cov_sd_pro(
+        id_list: Union[list[int], None] = Query(default=None),
+        session: Session = Depends(neo4j_connector.get_session)):
+    query_handler = Neo4jQueryHandler(session, MatrixProcessor())
+    return (query_handler.query_wgt_cov_sd_pro(id_list))[0]
