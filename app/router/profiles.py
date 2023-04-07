@@ -5,7 +5,7 @@ from neo4j import Session
 
 from app.configuration.configs import Settings
 from app.db.db_driver import Neo4jConnector
-from app.handler.queryer import Neo4jQueryHandler
+from app.handler.querier import Neo4jQueryHandler
 from app.utils.data_formatter import MatrixProcessor
 
 router = APIRouter()

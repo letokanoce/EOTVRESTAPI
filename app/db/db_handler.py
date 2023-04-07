@@ -17,18 +17,19 @@ class Neo4jHandler(ABC):
         pass
 
 
-class Neo4jQueryer(Neo4jHandler):
+class Neo4jQuerier(Neo4jHandler):
 
     def __init__(self, session: Session, processor: IProcessData):
         super().__init__(session)
         self.data_processor = processor
 
     def run_cypher(self, cypher: str, parameters: dict) -> Union[list, None]:
-        query_results = self.session.run(cypher, parameters).data()
-        result = self.data_processor.process(query_results)
-        if result is not None:
-            return result
-        raise HTTPException(status_code=404, detail=f"{parameters} not found")
+        with self.session.begin_transaction() as tx:
+            query_results = tx.run(cypher, parameters).data()
+            result = self.data_processor.process(query_results)
+            if result is not None:
+                return result
+            raise HTTPException(status_code=404, detail=f"{parameters} not found")
 
 
 class Neo4jPoster(Neo4jHandler):
@@ -38,8 +39,9 @@ class Neo4jPoster(Neo4jHandler):
         self.data_processor = processor
 
     def run_cypher(self, cypher: str, parameters: dict) -> Union[list, None]:
-        post_results = self.session.run(cypher, parameters).data()
-        result = post_results
-        if result is not None:
-            return result
-        raise HTTPException(status_code=404, detail=f"{parameters} not found")
+        with self.session.begin_transaction() as tx:
+            post_results = tx.run(cypher, parameters).data()
+            result = post_results
+            if result is not None:
+                return result
+            raise HTTPException(status_code=404, detail=f"{parameters} not found")

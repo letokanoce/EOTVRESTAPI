@@ -4,7 +4,7 @@ import numpy as np
 from neo4j import Session
 
 from app.cypher.query_cypher import *
-from app.db.db_handler import Neo4jQueryer
+from app.db.db_handler import Neo4jQuerier
 from app.utils.data_formatter import IProcessData
 
 
@@ -16,7 +16,7 @@ class Neo4jQueryHandler:
 
     @property
     def query_session(self):
-        return Neo4jQueryer(self.session, self.processor)
+        return Neo4jQuerier(self.session, self.processor)
 
     def query_ids_rel(self,
                       category: str = None,
