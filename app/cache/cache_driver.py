@@ -3,7 +3,8 @@ from abc import ABC, abstractmethod
 import redis
 
 from app.cache.cache_handler import CacheHandler
-from app.cache.sub_strat import ISubStrategy
+from app.cache.searializer import ISerializer
+from app.cache.sub_strategy import ISubStrategy
 from app.configuration.configs import Settings
 from app.epbelsys.model import BaseProfile
 
@@ -27,7 +28,7 @@ class CacheConnection(ABC):
 
 
 class RedisConnector(CacheConnection):
-    def __init__(self, settings):
+    def __init__(self, settings, serializer: ISerializer):
         super().__init__(settings)
         self.pool = redis.ConnectionPool(
             host=settings.REDIS_HOST,
@@ -35,7 +36,7 @@ class RedisConnector(CacheConnection):
             password=settings.REDIS_PASSWORD,
             db=0
         )
-        self.cache_handler = CacheHandler(self.pool)
+        self.cache_handler = CacheHandler(self.pool, serializer)
 
     def get(self, base_profile: BaseProfile):
         return self.cache_handler.get(base_profile)

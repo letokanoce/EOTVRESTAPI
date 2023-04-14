@@ -5,7 +5,8 @@ import pickle
 from fastapi import APIRouter, Depends, Body
 
 from app.cache.cache_driver import RedisConnector
-from app.cache.sub_strat import LRUStrategy
+from app.cache.sub_strategy import LRUStrategy
+from app.cache.searializer import PickleSerializer
 from app.configuration.configs import Settings
 
 router = APIRouter()
@@ -13,7 +14,7 @@ settings = Settings()
 
 
 def get_redis_connector():
-    return RedisConnector(settings)
+    return RedisConnector(settings, PickleSerializer())
 
 
 @router.get("/get/redis")

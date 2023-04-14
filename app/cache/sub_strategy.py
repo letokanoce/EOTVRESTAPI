@@ -20,6 +20,6 @@ class LRUStrategy(ISubStrategy):
 
         # if there are less than 10 values, add the new one
         # remove the least recently used value
-        redis_conn.hdel(key, pickle.loads(sorted_values[0]).sub_level)
+        redis_conn.hdel(key, pickle.loads(sorted_values[0]).sub_class_level)
         # add the new value
-        redis_conn.hset(key, base_profile.sub_level, pickle.dumps(base_profile))
+        redis_conn.hset(key, base_profile.sub_class_level, pickle.dumps(base_profile))
