@@ -1,33 +1,25 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.router.cache import router as cache_router
-from app.router.nodes import router as node_router
-from app.router.profiles import router as profile_router
+from app.router.neo4j_basic import router as neo4j_router_basic
+from app.router.nodes import router as nodes_router
+from app.router.profiles import router as profiles_router
+from app.router.redis_basic import router as redis_router
 
-app = FastAPI(openapi_url="/api/v1/openapi.json")
-
-origins = [
-    "http://localhost:3000",
-]
-
+app = FastAPI()
 app.add_middleware(CORSMiddleware,
-                   allow_origins=origins,
                    allow_credentials=True,
+                   allow_origins=["*"],
                    allow_methods=["*"],
                    allow_headers=["*"])
 
 
 @app.get("/")
 async def read_root():
-    return {"Hello": "EOTVREST"}
+    return {"HELLO": "EotV RESTful API Service"}
 
 
-@app.get("/endpoints")
-async def get_all_endpoints():
-    return [{"path": route.path, "name": route.name} for route in app.routes]
-
-
-app.include_router(node_router)
-app.include_router(profile_router)
-app.include_router(cache_router)
+app.include_router(neo4j_router_basic)
+app.include_router(redis_router)
+app.include_router(nodes_router)
+app.include_router(profiles_router)

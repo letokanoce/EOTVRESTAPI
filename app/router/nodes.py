@@ -1,49 +1,68 @@
-from typing import Union
+from typing import Union, List
 
-from fastapi import APIRouter, Body, Depends, Query
+from fastapi import APIRouter, Depends, Query
 from neo4j import Session
 
-from app.configuration.configs import Settings
-from app.db.db_driver import Neo4jConnector
-from app.handler.poster import Neo4jPostHandler
-from app.handler.querier import Neo4jQueryHandler
-from app.utils.data_formatter import StringProcessor, MatrixProcessor
+from app.handler.manager import Neo4jContextManager
+from app.instance import neo4j_driver
+from app.utils.formatter import NodeFormatter
 
 router = APIRouter()
-settings = Settings()
-neo4j_connector = Neo4jConnector(settings)
 
 
-@router.post("/create/node", response_description="Create a node")
-async def create_node(category: str = Body(None, embed=True),
-                      context: str = Body("reality", embed=True),
-                      meaning: str = Body("figurative", embed=True),
-                      descriptions: dict = Body({}, embed=True),
-                      session: Session = Depends(neo4j_connector.get_session)):
-    neo4j_post_handler = Neo4jPostHandler(session, StringProcessor())
-    return neo4j_post_handler.create_node(category, context, meaning,
-                                          descriptions)
+@router.get('/n/nodes/info', response_description="Get N Sub Level Entities IDs List")
+def get_node(category: Union[str, None] = Query(default=None),
+             sub_class_level: Union[str, int] = Query(default=1),
+             context: Union[str, None] = Query(default='reality'),
+             meaning: Union[str, None] = Query(default='literal'),
+             session: Session = Depends(neo4j_driver.create_session)):
+    with Neo4jContextManager(session=session, handler_class='querier') as neo4j_ctxt_mgr:
+        try:
+            query_results = neo4j_ctxt_mgr.query_node_ids(category, sub_class_level, context, meaning)
+            result = NodeFormatter(query_results).node_extraction('currentNode', 'parentNode', 'subLevel')
+            print(f"Query executed successfully, found {len(query_results)} nodes")
+            return result
+        except Exception as e:
+            raise Exception(f"Error occurred while getting node {category}: {e}")
 
 
 @router.get("/feature", response_description="Get N Sub Level Feature")
 async def get_n_sub_feature(
-        id_list: Union[list[int], None] = Query(default=None),
-        session: Session = Depends(neo4j_connector.get_session)):
-    query_handler = Neo4jQueryHandler(session, MatrixProcessor())
-    return query_handler.query_feature(id_list)[0]
+        ids: Union[List[str], None] = Query(default=None),
+        session: Session = Depends(neo4j_driver.create_session)):
+    with Neo4jContextManager(session=session,  handler_class='querier') as neo4j_ctxt_mgr:
+        try:
+            query_results = neo4j_ctxt_mgr.query_props_by_id(ids)
+            result = NodeFormatter(query_results).node_extraction('class')
+            print(f"Query executed successfully, found {len(query_results)} nodes' feature")
+            return result['class']
+        except Exception as e:
+            raise Exception(f"Error occurred while getting nodes' properties: {e}")
 
 
 @router.get("/pvalue", response_description="Get N Sub Level P Value")
-async def get_sub_n_pval(id_list: Union[list[int], None] = Query(default=None),
-                         session: Session = Depends(
-                             neo4j_connector.get_session)):
-    query_handler = Neo4jQueryHandler(session, MatrixProcessor())
-    return query_handler.query_pval(id_list)[0]
+async def get_sub_n_pval(
+        ids: Union[List[str], None] = Query(default=None),
+        session: Session = Depends(neo4j_driver.create_session)):
+    with Neo4jContextManager(session=session, handler_class='querier') as neo4j_ctxt_mgr:
+        try:
+            query_results = neo4j_ctxt_mgr.query_props_by_id(ids)
+            result = NodeFormatter(query_results).node_extraction('pvalue')
+            print(f"Query executed successfully, found {len(query_results)} nodes' p value")
+            return result['pvalue']
+        except Exception as e:
+            raise Exception(f"Error occurred while getting nodes' properties: {e}")
 
 
 @router.get("/weight", response_description="Get N Sub Level Weight")
-async def get_sub_n_wgt(id_list: Union[list[int], None] = Query(default=None),
-                        session: Session = Depends(
-                            neo4j_connector.get_session)):
-    query_handler = Neo4jQueryHandler(session, MatrixProcessor())
-    return query_handler.query_wgt(id_list)[0]
+async def get_sub_n_wgt(
+        ids: Union[List[str], None] = Query(default=None),
+        session: Session = Depends(neo4j_driver.create_session)):
+    with Neo4jContextManager(session=session, handler_class='querier') as neo4j_ctxt_mgr:
+        try:
+            query_results = neo4j_ctxt_mgr.query_props_by_id(ids)
+            result = NodeFormatter(query_results).node_extraction('weight')
+            print(f"Query executed successfully, found {len(query_results)} nodes' weight")
+            return result['weight']
+        except Exception as e:
+            raise Exception(f"Error occurred while getting nodes' properties: {e}")
