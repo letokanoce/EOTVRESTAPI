@@ -32,7 +32,7 @@ class Neo4jDriver(DbConnection):
         try:
             driver = GraphDatabase.driver(uri=self.settings.NEO4J_URI,
                                           auth=(self.settings.NEO4J_USERNAME, self.settings.NEO4J_PASSWORD),
-                                          max_connection_pool_size=self.pool_size)
+                                          max_connection_pool_size=self.pool_size, max_connection_lifetime=200)
             print("Neo4j connection established successfully")
             return driver
         except Exception as e:

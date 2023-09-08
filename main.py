@@ -2,7 +2,6 @@ import asyncio
 
 import uvicorn
 
-from app.epbelsys.model import *
 from app.configuration.configs import CommonSettings
 
 common_settings = CommonSettings()
