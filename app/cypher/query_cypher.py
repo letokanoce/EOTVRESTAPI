@@ -28,7 +28,7 @@ GET_PVAL_CORRELATION_COEFF = """
        RETURN collect(coalesce(r.pval_corr, 1)) AS CoefficientMatrix
        """
 
-GET_PVAL_CORRELATION_SDPROD = """
+GET_PVAL_CORRELATION_SD_PROD = """
        UNWIND $node_ids AS x
        UNWIND $node_ids AS y
        MATCH (a),(b)
@@ -50,7 +50,7 @@ GET_WEIGHT_COV_COEFF = """
        RETURN collect(correlation) AS CoefficientMatrix
        """
 
-GET_WEIGHT_COV_SDPROD = """
+GET_WEIGHT_COV_SD_PROD = """
        UNWIND $node_ids AS x
        UNWIND $node_ids AS y
        MATCH (a),(b)

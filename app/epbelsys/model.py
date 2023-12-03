@@ -16,9 +16,9 @@ class MathLimit:
 
 class BaseProfile:
 
-    def __init__(self, category: str, sub_class_level: int, env_settings: EnvironSettings, params: dict):
+    def __init__(self, category: str, sub_level: int, env_settings: EnvironSettings, params: dict):
         self.category = category
-        self.sub_class_level = sub_class_level
+        self.sub_level = sub_level
         self.env_settings = env_settings
         self.node_id = params["node_id"]
         self.feature = params["feature"]

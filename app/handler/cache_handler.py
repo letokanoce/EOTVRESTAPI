@@ -34,7 +34,7 @@ class RedisHandler:
         key = self._generate_key(base_profile)
         try:
             if not self.client.exists(key):
-                self.client.hset(name=key, key=base_profile.sub_class_level,
+                self.client.hset(name=key, key=base_profile.sub_level,
                                  value=self.serializer.serialize(base_profile))
                 print(f"added new value to cache")
                 return
@@ -57,7 +57,7 @@ class RedisHandler:
     def _level_exists_in_cache(self, client: Redis, key: str, base_profile: BaseProfile):
         values = client.hvals(name=key)
         matched_entity = [self.serializer.deserialize(data=val) for val in values if
-                          self.serializer.deserialize(data=val).sub_class_level == base_profile.sub_class_level]
+                          self.serializer.deserialize(data=val).sub_level == base_profile.sub_level]
         print(f"matched entity is: {matched_entity}")
         entity_exists = any(matched_entity)
         return entity_exists, matched_entity[0] if entity_exists else None
@@ -65,7 +65,7 @@ class RedisHandler:
     def _add_or_replace_value(self, client: Redis, key: str, base_profile: BaseProfile, strategy):
         values = client.hvals(name=key)
         if len(values) < 2:
-            client.hset(name=key, key=base_profile.sub_class_level, value=self.serializer.serialize(base_profile))
+            client.hset(name=key, key=base_profile.sub_level, value=self.serializer.serialize(base_profile))
             print('added new value to cache')
         else:
             print('replacing value in cache')

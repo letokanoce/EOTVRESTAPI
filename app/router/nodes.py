@@ -12,13 +12,13 @@ router = APIRouter()
 
 @router.get('/n/nodes/info', response_description="Get N Sub Level Entities IDs List")
 def get_node(category: Union[str, None] = Query(default=None),
-             sub_class_level: Union[str, int] = Query(default=1),
+             sub_level: Union[str, int] = Query(default=1),
              context: Union[str, None] = Query(default='reality'),
              meaning: Union[str, None] = Query(default='literal'),
              session: Session = Depends(neo4j_driver.create_session)):
     with Neo4jContextManager(session=session, handler_class='querier') as neo4j_ctxt_mgr:
         try:
-            query_results = neo4j_ctxt_mgr.query_node_ids(category, sub_class_level, context, meaning)
+            query_results = neo4j_ctxt_mgr.query_node_ids(category, sub_level, context, meaning)
             result = NodeFormatter(query_results).node_extraction('currentNode', 'parentNode', 'subLevel')
             print(f"Query executed successfully, found {len(query_results)} nodes")
             return result
